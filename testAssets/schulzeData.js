@@ -3,6 +3,7 @@ module.exports =
 loginData = [
     {
         email: 'marvas987@gmail.com',
+        // email: 'wanderingwhistler01@gmail.com',
         password: 'testme123'
     }
 ]

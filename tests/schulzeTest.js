@@ -9,6 +9,7 @@ module.exports = {
     },
     'Login Test': browser => {
         pageObject
+            .loginAndLogout("Sign In")
             .login(data)
     },
     'Add to Shopping Cart Test': browser => {
@@ -18,16 +19,16 @@ module.exports = {
             .clickButtonByText('Tablets, 390 ct')
             .clickButtonByText('ADD TO CART')
             .checkCart('1')
-            .oneSecondPause()
+            .twoSecondPause()
             .selectingItem(navbarData[0].shop, shoppingCart[0].heart)
             .clickButtonByText('4-oz')
             .clickIncreaseButton()
             pageObject.clickButtonByText('ADD TO CART')
             .checkCart('3')
-            .oneSecondPause()
+            .twoSecondPause()
             .selectingItem(navbarData[0].immune, shoppingCart[0].cPlus)
             pageObject.clickButtonByText('Powder')
-            .oneSecondPause()
+            .twoSecondPause()
             pageObject.clickIncreaseButton()
             pageObject.clickIncreaseButton()
             pageObject.clickIncreaseButton()
@@ -37,7 +38,6 @@ module.exports = {
             pageObject.clickIncreaseButton()
             pageObject.clickButtonByText('ADD TO CART')
             .checkCart('11')
-            .oneSecondPause()
     },
     'Removing from Shopping Cart Test': browser => {
         pageObject
@@ -47,7 +47,7 @@ module.exports = {
             .checkCartSummary(shoppingCart[0].heart)
             .checkCartSummary(shoppingCart[0].cPlus)
     },
-     'NavBar Test': browser => {
+    'NavBar Test': browser => {
         pageObject
             .clickLinkByText(navbarData[0].shop)
             .verifyUrl(navbarData[0].shopURL)
@@ -67,6 +67,7 @@ module.exports = {
             .verifyUrl(navbarData[0].blog)
             .clickLinkByText(navbarData[0].specials)
             .verifyUrl(navbarData[0].specialsURL)
+            .twoSecondPause()
     },
     'Search Test': browser => {
         browser.useCss()
@@ -80,7 +81,7 @@ module.exports = {
         browser
             .useXpath()
             .moveToElement('(//div[@class="content ingredients-list"]//p)[3]', 0, 0)
-            pageObject.oneSecondPause()
+            pageObject.twoSecondPause()
         browser
             .getText('(//div[@class="content ingredients-list"]//p)[3]', function (result) {
                 var results = result.value
@@ -111,12 +112,12 @@ module.exports = {
                         browser.url(`https://www.google.com/search?q=${searchString}+wikipedia`)
                         browser.getText('(//h3[contains(text(), "Wikipedia")])[1]', function(result){
                             var results = result.value
-                            var something = results.replace(" - Wikipedia", "")
+                            var scientificName = results.replace(" - Wikipedia", "")
                             browser.useCss()
                             browser.waitForElementVisible('#res')
                             browser.useXpath()
                             browser.click('(//h3[contains(text(), "Wikipedia")])[1]')
-                            browser.expect.element('//div[@class="mw-parser-output"]').text.to.contain(something)
+                            browser.expect.element('//div[@class="mw-parser-output"]').text.to.contain(scientificName)
                             browser.back()
                         })
                     })
@@ -124,4 +125,16 @@ module.exports = {
             })
         })
     },
+    'Closing Windows and Logging Out': browser => {
+        browser.windowHandles(function(results){
+            var DrSchulze = results.value[0]
+            var Google = results.value[1]
+            browser.switchWindow(Google)
+            browser.closeWindow()
+            browser.switchWindow(DrSchulze)
+            pageObject.twoSecondPause()
+            pageObject.loginAndLogout("Logout")
+        })
+    }
 }
+

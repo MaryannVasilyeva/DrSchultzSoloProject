@@ -10,66 +10,70 @@ var customCommands = {
         this.click(`//li//a//h2[contains(text(), "${text}")]`)
         return this
     },
-    verifyUrl: function(url){
+    verifyUrl: function (url) {
         this.verify.urlContains('https://www.herbdoc.com/' + url)
         return this
     },
-    clickIncreaseButton: function (button){
+    clickIncreaseButton: function (button) {
         this.api.useXpath()
         this.click('//button[@id="increaseBtn"]')
     },
-    login: function (loginData) {
+    loginAndLogout: function (data) {
         this.waitForElementPresent('@homepage')
         this.api.useXpath()
-        this.click('//a[contains(text(), "Sign In")]')
+        this.waitForElementPresent(`(//a[contains(text(), "${data}")])[1]`)
+        this.click(`(//a[contains(text(), "${data}")])[1]`)
+        return this
+    },
+    login: function (loginData) {
         this.api.useCss()
-        this.api.pause(1000)
+        this.twoSecondPause()
         this.waitForElementPresent('@signInModal')
         this.waitForElementPresent('@emailLogin', 20000)
         this.setValue('@emailLogin', loginData[0].email)
         this.setValue('@passwordLogin', loginData[0].password)
-
-        // **************** here put expect elemecnt type to be a password **************
         this.clickButtonByText('SIGN IN')
         this.waitForElementPresent('@signInName')
         return this
     },
-    checkCart: function(number){
-        this.api.pause(1000)
+    checkCart: function (number) {
+        this.twoSecondPause()
         this.api.useXpath()
         this.verify.containsText('//span[@class="badge"]', number)
         return this
     },
-    selectingItem: function(navbar, item){
+    selectingItem: function (navbar, item) {
         this
-            if(navbar == "nutrition"){
-                this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
-                this.moveToElement(`//div[@class="row product-list"]//h4[contains(text(), "${item}")]`, 0, 0)
-                this.click(`//div[@class="row product-list"]//h4[contains(text(), "${item}")]`)
-            }
-            else if(navbar == "Shop"){
-                this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
-                this.moveToElement(`(//h4[contains(text(), "${item}")])[1]`, 0, 0)
-                this.click(`(//h4[contains(text(), "${item}")])[1]`)
-            }
-            else if(navbar == "immune"){
-                this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
-                this.moveToElement(`(//h4[contains(text(), "${item}")])[4]`, 0, 0)
-                this.click(`(//h4[contains(text(), "${item}")])[4]`)
-            }
+        if (navbar == "nutrition") {
+            this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
+            this.moveToElement(`//div[@class="row product-list"]//h4[contains(text(), "${item}")]`, 0, 0)
+            this.click(`//div[@class="row product-list"]//h4[contains(text(), "${item}")]`)
+        }
+        else if (navbar == "Shop") {
+            this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
+            this.moveToElement(`(//h4[contains(text(), "${item}")])[1]`, 0, 0)
+            this.click(`(//h4[contains(text(), "${item}")])[1]`)
+        }
+        else if (navbar == "immune") {
+            this.moveToElement(`//li//a//h2[contains(text(), "${navbar}")]`, 0, 0)
+            this.moveToElement(`(//h4[contains(text(), "${item}")])[4]`, 0, 0)
+            this.click(`(//h4[contains(text(), "${item}")])[4]`)
+        }
         return this
     },
-    checkCartSummary: function(text){
+    checkCartSummary: function (text) {
         this.api.useXpath()
         this.waitForElementPresent('(//div[@class="panel-body"])[1]')
-        this.api.pause(1000)
-        this.waitForElementPresent('//a[@class="remove"]', 1000)
-        this.click('//a[@class="remove"]')
-        this.verify.elementNotPresent(`(//div[@class="title"]//a[contains(text(), "${text}")])`)
+        this.waitForElementPresent(`(//div[@class="title"]//a[contains(text(), "${text}")])`, 8000)
+        this.waitForElementPresent('(//a[@class="remove"])[1]', 8000)
+        this.api.pause(3000)
+        this.click('(//a[@class="remove"])[1]')
+        this.twoSecondPause()
+        this.verify.elementNotPresent(`(//div[@class="title"]//a[contains(text(), "${text}")])`, 8000)
         return this
     },
-    oneSecondPause: function () {
-        this.api.pause(1000)
+    twoSecondPause: function () {
+        this.api.pause(2000)
         return this
     }
 }
